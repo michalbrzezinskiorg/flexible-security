@@ -167,30 +167,35 @@ class SpringControllersForSecurity {
         Map<String[], String> values = new HashMap<>();
         if (annotation.annotationType() == GetMapping.class) {
             GetMapping mapping = (GetMapping) annotation;
-            values.put(mapping.value() != null ? mapping.value() : mapping.value(), GET);
+            values.put(getKey(mapping.value(), mapping.path()), GET);
         }
         if (annotation.annotationType() == PostMapping.class) {
             PostMapping mapping = (PostMapping) annotation;
-            values.put(mapping.value() != null ? mapping.value() : mapping.value(), POST);
+            values.put(getKey(mapping.value(), mapping.path()), POST);
         }
         if (annotation.annotationType() == DeleteMapping.class) {
             DeleteMapping mapping = (DeleteMapping) annotation;
-            values.put(mapping.value() != null ? mapping.value() : mapping.value(), DELETE);
+            values.put(getKey(mapping.value(), mapping.path()), DELETE);
         }
         if (annotation.annotationType() == PutMapping.class) {
             PutMapping mapping = (PutMapping) annotation;
-            values.put(mapping.value() != null ? mapping.value() : mapping.value(), PUT);
+            values.put(getKey(mapping.value(), mapping.path()), PUT);
         }
         if (annotation.annotationType() == PatchMapping.class) {
             PatchMapping mapping = (PatchMapping) annotation;
-            values.put(mapping.value() != null ? mapping.value() : mapping.value(), PATCH);
+            values.put(getKey(mapping.value(), mapping.path()), PATCH);
         }
         if (annotation.annotationType() == RequestMapping.class) {
             RequestMapping mapping = (RequestMapping) annotation;
             RequestMethod[] methods = mapping.method();
-            Stream.of(methods).forEach(m -> values.put(mapping.value() != null ? mapping.value() : mapping.value(), m.name()));
+            if (methods.length == 0) values.put(getKey(mapping.value(), mapping.path()), GET);
+            Stream.of(methods).forEach(m -> values.put(getKey(mapping.value(), mapping.path()), m.name()));
         }
         return values;
+    }
+
+    private String[] getKey(String[] value, String[] path) {
+        return path.length > 0 ? path : value;
     }
 
 
