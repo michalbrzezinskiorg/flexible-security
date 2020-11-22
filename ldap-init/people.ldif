@@ -1,0 +1,21 @@
+dn: ou=People,dc=securitate,dc=com
+ou: People
+objectClass: organizationalUnit
+
+dn: cn=user1,ou=People,dc=securitate,dc=com
+myadditionnalAttr2: Value2
+myadditionnalAttr: Value1
+sn: My User1
+mail: user1@securitate.com
+userPassword: user1
+cn: user1
+objectClass: personnel
+
+dn: cn=user2,ou=People,dc=securitate,dc=com
+myadditionnalAttr2: Value2
+myadditionnalAttr: Value1
+sn: My User2
+mail: user2@securitate.com
+userPassword: user2
+cn: user2
+objectClass: personnel

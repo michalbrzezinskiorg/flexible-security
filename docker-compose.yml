@@ -1,0 +1,55 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: 'always'
+    command: --sql_mode="" --max_allowed_packet=325058560
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: securitate
+      MYSQL_DATABASE: securitate
+      MYSQL_USER: securitate
+      MYSQL_PASSWORD: securitate
+  ldap-host:
+    image: osixia/openldap:1.4.0
+    container_name: ldap-host
+    hostname: ldap-service
+    volumes:
+      - ./data/ldap/ldif_files:/ldif_files
+    environment:
+      - LDAP_ORGANISATION="Securitate Inc."
+      - LDAP_DOMAIN=securitate.com
+      - LDAP_ADMIN_PASSWORD=admin
+    ports:
+      - "389:389"
+    command: sh -c 'chmod +x /ldif_files/start.sh & /ldif_files/start.sh'
+  phpldapadmin-service:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin-service
+    hostname: phpldapadmin-service
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=ldap-host
+    ports:
+      - "6443:443"
+    depends_on:
+      - ldap-host
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - 88:80
+    volumes:
+      - ./sessions
+networks:
+  secured:
+    driver: bridge

@@ -1,0 +1,5 @@
+LDAP_HOSTNAME=ldap://localhost:389
+LDAP_MANAGER_USERNAME=admin
+LDAP_MANAGER_PASSWORD=admin
+USER_SEARCH_BASE=ou=People,dc=securitate,dc=com
+USER_SEARCH_FILTER=(|(cn={0})(mail={0}))
