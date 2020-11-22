@@ -1,17 +1,15 @@
 package org.michalbrzezinski.securitate.database.security;
 
-import org.michalbrzezinski.securitate.domain.security.ControllerDO;
-import org.michalbrzezinski.securitate.domain.security.PermissionDO;
-import org.michalbrzezinski.securitate.domain.security.RoleDO;
-import org.michalbrzezinski.securitate.domain.security.UserDO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.domain.security.objects.PermissionDO;
+import org.michalbrzezinski.securitate.domain.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.domain.security.objects.UserDO;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +29,7 @@ class SecurityCommandService {
         log.info("save [{}]", controllerDO);
         try {
             log.info("found controller [{}]", controllerDO);
-            Controller controller = customEntityMapper.buildController(controllerDO);
+            Controller controller = customEntityMapper.map(controllerDO);
             log.info("mapped controller [{}]", controller);
             controllerRepository.save(controller);
         } catch (Exception e) {
@@ -41,22 +39,22 @@ class SecurityCommandService {
 
     UserDO save(UserDO user) {
         log.info("save [{}]", user);
-        User u = customEntityMapper.buildUser(user);
+        User u = customEntityMapper.map(user);
         saveRoles(user.getRoles());
         savePermissionDO(user.getPermissions());
         Set<Role> roles = getRoles(user);
         Set<Permission> permissions = getPermissions(user);
         u.setRoles(roles);
         u.setPermissions(permissions);
-        return customEntityMapper.buildUser(userRepository.save(u));
+        return customEntityMapper.map(userRepository.save(u));
     }
 
     RoleDO save(RoleDO role) {
         log.info("save [{}]", role);
-        Role r = customEntityMapper.buildRole(role);
+        Role r = customEntityMapper.map(role);
         Set<Controller> roles = getControllersForRole(role);
         r.setControllers(roles);
-        return customEntityMapper.buildRole(save(r));
+        return customEntityMapper.map(save(r));
     }
 
 
@@ -64,8 +62,8 @@ class SecurityCommandService {
         log.info("getRoles for user [{}]", u);
         Set<Role> roles = u.getRoles().stream()
                 .map(r -> roleRepository.findById(r.getId()))
-                .filter(o -> o.isPresent())
-                .map(o -> o.get())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toSet());
         log.info("found Roles [{}]", roles);
         return roles;
@@ -75,7 +73,8 @@ class SecurityCommandService {
         log.info("getPermissions for user [{}]", u);
         Set<Permission> permissions = u.getPermissions()
                 .stream().map(p -> permissionRepository.findById(p.getId()))
-                .filter(o -> o.isPresent()).map(o -> o.get())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toSet());
         log.info("found Permissions [{}]", permissions);
         return permissions;
@@ -86,7 +85,7 @@ class SecurityCommandService {
         log.info("getControllersForRole [{}]", role);
         Set<Controller> controllers = role.getControllers().stream()
                 .map(c -> controllerRepository.findById(c.getId()))
-                .filter(c -> c.isPresent())
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
         log.info("found Controllers [{}]", controllers);
@@ -103,7 +102,7 @@ class SecurityCommandService {
 
     private Permission save(PermissionDO p) {
         log.info("save [{}]", p);
-        Permission saved = permissionRepository.save(customEntityMapper.buildPermissions(p));
+        Permission saved = permissionRepository.save(customEntityMapper.map(p));
         log.info("saved [{}]", saved);
         return saved;
     }
@@ -112,7 +111,7 @@ class SecurityCommandService {
         log.info("save [{}]", roles);
         roles.stream()
                 .filter(r -> roleRepository.findByName(r.getName()).isEmpty())
-                .map(r -> save(customEntityMapper.buildRole(r)))
+                .map(r -> save(customEntityMapper.map(r)))
                 .peek(r -> r.setControllers(getControllers(r)))
                 .collect(Collectors.toSet());
     }
@@ -121,8 +120,9 @@ class SecurityCommandService {
         log.info("save [{}]", r);
         return r.getControllers().stream()
                 .map(c -> controllerRepository.findById(c.getId()))
-                .filter(c -> c.isPresent())
-                .map(c -> c.get()).collect(Collectors.toSet());
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
     }
 
     private Role save(Role role) {
@@ -130,13 +130,30 @@ class SecurityCommandService {
         return roleRepository.save(role);
     }
 
-    public void addPermission(PermissionDO permission) {
+    public PermissionDO addPermission(PermissionDO permission) {
         log.info("creating permission [{}]", permission);
         Collection<Controller> controllers = controllerRepository.findByIdIn(permission.getControllers().stream().map(ControllerDO::getId).collect(Collectors.toList()));
         User createdFor = userRepository.getOne(permission.getPermissionFor().getId());
         User createdBy = userRepository.getOne(permission.getCreatedBy().getId());
-        Permission permissionForUser = customEntityMapper.createPermissionForUser(permission, createdBy, createdFor, controllers);
+        Permission permissionForUser = customEntityMapper.map(permission, createdBy, createdFor, controllers);
         log.info("saving mapped values stored in PermissionDO [{}]", permissionForUser);
-        permissionRepository.save(permissionForUser);
+        return customEntityMapper.map(permissionRepository.save(permissionForUser));
+    }
+
+    public Optional<RoleDO> addControllerToRole(RoleDO roleDO) {
+        Optional<Role> role = roleRepository.findById(roleDO.getId());
+        role.ifPresent(r -> addControllerToRole(r, roleDO.getControllers()));
+        Optional<RoleDO> result = role.map(customEntityMapper::map);
+        return result;
+    }
+
+    private void addControllerToRole(Role r, Set<ControllerDO> controllersDO) {
+        List<Controller> controllers = controllerRepository.findByIdIn(controllersDO.stream().map(c -> c.getId()).collect(Collectors.toList()));
+        r.setControllers(new HashSet<>(controllers));
+        roleRepository.save(r);
+    }
+
+    public RoleDO saveNewRoleCreatedByUserEvent(RoleDO roleDO) {
+        return customEntityMapper.map(roleRepository.save(customEntityMapper.map(roleDO)));
     }
 }

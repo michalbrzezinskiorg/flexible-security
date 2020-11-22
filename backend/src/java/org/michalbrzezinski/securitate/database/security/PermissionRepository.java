@@ -12,6 +12,8 @@ import java.util.Set;
 @Transactional
 interface PermissionRepository extends PagingAndSortingRepository<Permission, Long> {
     Set<Permission> findAll();
+
     Page<Permission> findAll(Pageable pageable);
+
     Permission save(Permission permission);
 }

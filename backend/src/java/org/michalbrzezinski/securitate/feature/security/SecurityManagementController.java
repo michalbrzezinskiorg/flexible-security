@@ -1,10 +1,10 @@
 package org.michalbrzezinski.securitate.feature.security;
 
 import lombok.RequiredArgsConstructor;
-import org.michalbrzezinski.securitate.domain.security.ControllerDO;
-import org.michalbrzezinski.securitate.domain.security.PermissionDO;
-import org.michalbrzezinski.securitate.domain.security.RoleDO;
-import org.michalbrzezinski.securitate.domain.security.UserDO;
+import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.domain.security.objects.PermissionDO;
+import org.michalbrzezinski.securitate.domain.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.domain.security.objects.UserDO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,19 +24,19 @@ public class SecurityManagementController {
         return securityManagementService.getAllRoles(pageable);
     }
 
-    @GetMapping("roles")
+    @GetMapping("users")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public Page<UserDO> getAllUsers(Pageable pageable) {
         return securityManagementService.getAllUsers(pageable);
     }
 
-    @GetMapping("roles")
+    @GetMapping("controllers")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public Page<ControllerDO> getAllControllers(Pageable pageable) {
         return securityManagementService.getAllControllers(pageable);
     }
 
-    @GetMapping("roles")
+    @GetMapping("permissions")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public Page<PermissionDO> getAllPermissions(Pageable pageable) {
         return securityManagementService.getAllPermissions(pageable);

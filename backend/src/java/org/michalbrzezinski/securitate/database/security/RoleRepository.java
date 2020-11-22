@@ -13,6 +13,7 @@ import java.util.Optional;
 @Transactional
 interface RoleRepository extends JpaRepository<Role, Integer> {
     Page<Role> findAll(Pageable pageable);
+
     List<Role> findAll();
 
     Optional<Role> findByName(String roleName);

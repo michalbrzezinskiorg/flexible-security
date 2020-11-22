@@ -2,13 +2,12 @@ package org.michalbrzezinski.securitate.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.michalbrzezinski.securitate.config.SecuritateEventsPublisher;
-import org.michalbrzezinski.securitate.config.security.events.AddRoleEvent;
-import org.michalbrzezinski.securitate.config.security.events.AddUserEvent;
-import org.michalbrzezinski.securitate.database.security.SecurityQueryService;
-import org.michalbrzezinski.securitate.domain.security.ControllerDO;
-import org.michalbrzezinski.securitate.domain.security.RoleDO;
-import org.michalbrzezinski.securitate.domain.security.UserDO;
+import org.michalbrzezinski.securitate.domain.security.SecurityEventsPublisher;
+import org.michalbrzezinski.securitate.domain.security.events.CreateRoleSystemEvent;
+import org.michalbrzezinski.securitate.domain.security.events.CreateUserSystemEvent;
+import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.domain.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.domain.security.objects.UserDO;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -26,8 +25,8 @@ class CustomAuthenticationProvider {
 
     public static final String ADMIN = "admin";
     public static final String USER = "user";
-    private final SecurityQueryService securityQueryService;
-    private final SecuritateEventsPublisher applicationEventPublisher;
+    private final SecurityServiceForConfiguration securityQueryService;
+    private final SecurityEventsPublisher applicationEventPublisher;
 
     public Collection<? extends GrantedAuthority> getUserAuthorities(DirContextOperations userData, String username) {
         log.info(">>>>> AUTHORIZATION START <<<<< [{}]", username);
@@ -72,7 +71,7 @@ class CustomAuthenticationProvider {
                 .surname(displayName)
                 .login(login)
                 .build();
-        applicationEventPublisher.publish(AddUserEvent.builder()
+        applicationEventPublisher.publish(CreateUserSystemEvent.builder()
                 .created(ZonedDateTime.now())
                 .payload(u)
                 .build());
@@ -89,7 +88,7 @@ class CustomAuthenticationProvider {
             try {
                 log.info("saving [{}]", role);
                 applicationEventPublisher.publish(
-                        AddRoleEvent.builder()
+                        CreateRoleSystemEvent.builder()
                                 .created(ZonedDateTime.now())
                                 .payload(role)
                                 .build());

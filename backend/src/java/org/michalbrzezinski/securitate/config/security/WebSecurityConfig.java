@@ -28,9 +28,11 @@ import static org.michalbrzezinski.securitate.config.security.StringifiyControll
 @RequiredArgsConstructor
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String PUBLIC = "/public";
+    private static final String PUBLIC = "/public";
     private static final String LOGOUT = "/users/logout";
     private static final String[] PUBLIC_PLACES = {PUBLIC, LOGOUT};
+    private final SpringControllersForSecurity springControllersForSecurity;
+    private final CustomAuthenticationProvider authenticationProvider;
     @Value("${ldap.user.search.base}")
     private String userSearchBase;
     @Value("${ldap.user.search.filter}")
@@ -47,9 +49,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-    private final SpringControllersForSecurity springControllersForSecurity;
-    private final CustomAuthenticationProvider authenticationProvider;
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {

@@ -1,4 +1,4 @@
-package org.michalbrzezinski.securitate.domain.security;
+package org.michalbrzezinski.securitate.domain.security.objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,10 +2,9 @@ package org.michalbrzezinski.securitate.config.security;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.michalbrzezinski.securitate.config.SecuritateEventsPublisher;
-import org.michalbrzezinski.securitate.config.security.events.AddControllerEvent;
-import org.michalbrzezinski.securitate.database.security.SecurityQueryService;
-import org.michalbrzezinski.securitate.domain.security.ControllerDO;
+import org.michalbrzezinski.securitate.domain.security.SecurityEventsPublisher;
+import org.michalbrzezinski.securitate.domain.security.events.CreateControllerSystemEvent;
+import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.DependsOn;
@@ -33,9 +32,9 @@ class SpringControllersForSecurity {
     private static final String PUT = "PUT";
     private static final String PATCH = "PATCH";
     private final HashSet<AnnotatedController> controllers = new HashSet<>();
-    private final SecuritateEventsPublisher applicationEventPublisher;
+    private final SecurityEventsPublisher applicationEventPublisher;
 
-    public SpringControllersForSecurity(SecurityQueryService securityQueryService, SecuritateEventsPublisher applicationEventPublisher) {
+    public SpringControllersForSecurity(SecurityServiceForConfiguration securityQueryService, SecurityEventsPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
         addRequestMappingAnnotatedClassesToControllers();
         addNewControllersToDatabase(securityQueryService.findAllControllers());
@@ -52,7 +51,7 @@ class SpringControllersForSecurity {
                 .map(this::getAnnotatedControllerActionFunction)
                 .filter(c -> isUnique(existingControllers, c))
                 .peek(c -> log.info("found controller [{}]", c))
-                .map(c -> AddControllerEvent
+                .map(c -> CreateControllerSystemEvent
                         .builder()
                         .created(ZonedDateTime.now())
                         .payload(c)
@@ -168,28 +167,28 @@ class SpringControllersForSecurity {
         Map<String[], String> values = new HashMap<>();
         if (annotation.annotationType() == GetMapping.class) {
             GetMapping mapping = (GetMapping) annotation;
-            values.put(mapping.path(), GET);
+            values.put(mapping.value() != null ? mapping.value() : mapping.value(), GET);
         }
         if (annotation.annotationType() == PostMapping.class) {
             PostMapping mapping = (PostMapping) annotation;
-            values.put(mapping.value(), POST);
+            values.put(mapping.value() != null ? mapping.value() : mapping.value(), POST);
         }
         if (annotation.annotationType() == DeleteMapping.class) {
             DeleteMapping mapping = (DeleteMapping) annotation;
-            values.put(mapping.value(), DELETE);
+            values.put(mapping.value() != null ? mapping.value() : mapping.value(), DELETE);
         }
         if (annotation.annotationType() == PutMapping.class) {
             PutMapping mapping = (PutMapping) annotation;
-            values.put(mapping.value(), PUT);
+            values.put(mapping.value() != null ? mapping.value() : mapping.value(), PUT);
         }
         if (annotation.annotationType() == PatchMapping.class) {
             PatchMapping mapping = (PatchMapping) annotation;
-            values.put(mapping.value(), PATCH);
+            values.put(mapping.value() != null ? mapping.value() : mapping.value(), PATCH);
         }
         if (annotation.annotationType() == RequestMapping.class) {
             RequestMapping mapping = (RequestMapping) annotation;
             RequestMethod[] methods = mapping.method();
-            Stream.of(methods).forEach(m -> values.put(mapping.value(), m.name()));
+            Stream.of(methods).forEach(m -> values.put(mapping.value() != null ? mapping.value() : mapping.value(), m.name()));
         }
         return values;
     }
