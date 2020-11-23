@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-public interface SecurityServiceForManagemet {
+public interface DatabaseForSecurityManagement {
     Optional<UserDO> getUser(Integer id);
 
     Page<RoleDO> getAllRoles(Pageable pageable);

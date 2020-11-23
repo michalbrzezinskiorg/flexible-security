@@ -24,7 +24,7 @@ class CustomAuthenticationProvider {
 
     public static final String ADMIN = "admin";
     public static final String USER = "user";
-    private final SecurityServiceForConfiguration securityQueryService;
+    private final DatabaseForSecurityConfiguration securityQueryService;
     private final SecurityEventsPublisher applicationEventPublisher;
 
     public Collection<? extends GrantedAuthority> getUserAuthorities(DirContextOperations userData, String username) {

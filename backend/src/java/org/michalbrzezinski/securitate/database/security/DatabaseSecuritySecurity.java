@@ -2,8 +2,8 @@ package org.michalbrzezinski.securitate.database.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.michalbrzezinski.securitate.config.security.SecurityServiceForConfiguration;
-import org.michalbrzezinski.securitate.feature.security.SecurityServiceForManagemet;
+import org.michalbrzezinski.securitate.config.security.DatabaseForSecurityConfiguration;
+import org.michalbrzezinski.securitate.feature.security.DatabaseForSecurityManagement;
 import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
 import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
 import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-class SecurityQueryService implements SecurityServiceForConfiguration, SecurityServiceForManagemet {
+class DatabaseSecuritySecurity implements DatabaseForSecurityConfiguration, DatabaseForSecurityManagement {
 
     private final ControllerRepository controllerRepository;
     private final RoleRepository roleRepository;

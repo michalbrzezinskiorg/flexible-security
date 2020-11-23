@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("security")
-public class SecurityManagementController {
+class SecurityManagementController {
 
     private final SecurityManegementService securityManagementService;
 

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 class SecurityManegementService {
 
-    private final SecurityServiceForManagemet securityService;
+    private final DatabaseForSecurityManagement securityService;
     private final SecurityEventsPublisher publisher;
 
     public Page<RoleDO> getAllRoles(Pageable pageable) {

@@ -33,7 +33,7 @@ class SpringControllersForSecurity {
     private final HashSet<AnnotatedController> controllers = new HashSet<>();
     private final SecurityEventsPublisher applicationEventPublisher;
 
-    public SpringControllersForSecurity(SecurityServiceForConfiguration securityQueryService, SecurityEventsPublisher applicationEventPublisher) {
+    public SpringControllersForSecurity(DatabaseForSecurityConfiguration securityQueryService, SecurityEventsPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
         addRequestMappingAnnotatedClassesToControllers();
         addNewControllersToDatabase(securityQueryService.findAllControllers());
