@@ -2,9 +2,8 @@ package org.michalbrzezinski.securitate.config.security;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.michalbrzezinski.securitate.domain.security.SecurityEventsPublisher;
-import org.michalbrzezinski.securitate.domain.security.events.CreateControllerSystemEvent;
-import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.feature.security.events.CreateControllerSystemEvent;
+import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.DependsOn;

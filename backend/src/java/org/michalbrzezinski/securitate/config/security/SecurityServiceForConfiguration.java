@@ -1,8 +1,8 @@
 package org.michalbrzezinski.securitate.config.security;
 
-import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.domain.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.domain.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
 
 import java.util.Optional;
 import java.util.Set;

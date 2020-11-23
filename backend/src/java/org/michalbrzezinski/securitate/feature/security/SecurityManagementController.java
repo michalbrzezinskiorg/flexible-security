@@ -1,10 +1,10 @@
 package org.michalbrzezinski.securitate.feature.security;
 
 import lombok.RequiredArgsConstructor;
-import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.domain.security.objects.PermissionDO;
-import org.michalbrzezinski.securitate.domain.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.domain.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
+import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

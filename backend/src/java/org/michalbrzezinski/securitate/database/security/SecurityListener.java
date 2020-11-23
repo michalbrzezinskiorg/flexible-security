@@ -2,10 +2,9 @@ package org.michalbrzezinski.securitate.database.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.michalbrzezinski.securitate.domain.security.SecurityEventsPublisher;
-import org.michalbrzezinski.securitate.domain.security.events.*;
-import org.michalbrzezinski.securitate.domain.security.objects.PermissionDO;
-import org.michalbrzezinski.securitate.domain.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.feature.security.events.*;
+import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
+import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

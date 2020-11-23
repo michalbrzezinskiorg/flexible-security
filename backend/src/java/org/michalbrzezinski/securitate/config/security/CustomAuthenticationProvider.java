@@ -2,12 +2,11 @@ package org.michalbrzezinski.securitate.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.michalbrzezinski.securitate.domain.security.SecurityEventsPublisher;
-import org.michalbrzezinski.securitate.domain.security.events.CreateRoleSystemEvent;
-import org.michalbrzezinski.securitate.domain.security.events.CreateUserSystemEvent;
-import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.domain.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.domain.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.events.CreateRoleSystemEvent;
+import org.michalbrzezinski.securitate.feature.security.events.CreateUserSystemEvent;
+import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;

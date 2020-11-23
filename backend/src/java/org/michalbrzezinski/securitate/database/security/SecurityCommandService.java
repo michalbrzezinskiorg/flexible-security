@@ -2,10 +2,10 @@ package org.michalbrzezinski.securitate.database.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.domain.security.objects.PermissionDO;
-import org.michalbrzezinski.securitate.domain.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.domain.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
+import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

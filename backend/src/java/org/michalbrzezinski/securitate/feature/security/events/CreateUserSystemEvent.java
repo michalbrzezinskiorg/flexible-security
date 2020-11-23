@@ -1,8 +1,8 @@
-package org.michalbrzezinski.securitate.domain.security.events;
+package org.michalbrzezinski.securitate.feature.security.events;
 
 import lombok.Builder;
 import lombok.Value;
-import org.michalbrzezinski.securitate.domain.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
 
 import java.time.ZonedDateTime;
 

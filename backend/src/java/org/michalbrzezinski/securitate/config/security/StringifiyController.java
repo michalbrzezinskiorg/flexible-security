@@ -1,6 +1,6 @@
 package org.michalbrzezinski.securitate.config.security;
 
-import org.michalbrzezinski.securitate.domain.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
 import org.springframework.http.HttpMethod;
 
 class StringifiyController {
