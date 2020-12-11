@@ -2,6 +2,7 @@ package org.michalbrzezinski.securitate.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.michalbrzezinski.securitate.config.security.port.DatabaseForSecurityConfiguration;
 import org.michalbrzezinski.securitate.feature.security.events.CreateRoleSystemEvent;
 import org.michalbrzezinski.securitate.feature.security.events.CreateUserSystemEvent;
 import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
@@ -25,7 +26,7 @@ class CustomAuthenticationProvider {
     public static final String ADMIN = "admin";
     public static final String USER = "user";
     private final DatabaseForSecurityConfiguration securityQueryService;
-    private final SecurityEventsPublisher applicationEventPublisher;
+    private final SecurityConfigEventsPublisher applicationEventPublisher;
 
     public Collection<? extends GrantedAuthority> getUserAuthorities(DirContextOperations userData, String username) {
         log.info(">>>>> AUTHORIZATION START <<<<< [{}]", username);

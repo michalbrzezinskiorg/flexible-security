@@ -15,10 +15,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SecurityListener {
+class SecurityListener {
 
     private final SecurityCommandService securityCommandService;
-    private final SecurityEventsPublisher securityEventsPublisher;
+    private final SecurityDatabseEventsPublisher securityEventsPublisher;
 
     @Async
     @EventListener

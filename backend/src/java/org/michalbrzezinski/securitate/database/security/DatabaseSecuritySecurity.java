@@ -2,7 +2,7 @@ package org.michalbrzezinski.securitate.database.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.michalbrzezinski.securitate.config.security.DatabaseForSecurityConfiguration;
+import org.michalbrzezinski.securitate.config.security.port.DatabaseForSecurityConfiguration;
 import org.michalbrzezinski.securitate.feature.security.DatabaseForSecurityManagement;
 import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
 import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;

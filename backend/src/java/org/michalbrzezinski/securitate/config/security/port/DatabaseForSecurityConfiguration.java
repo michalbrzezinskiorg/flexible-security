@@ -1,4 +1,4 @@
-package org.michalbrzezinski.securitate.config.security;
+package org.michalbrzezinski.securitate.config.security.port;
 
 import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
 import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;

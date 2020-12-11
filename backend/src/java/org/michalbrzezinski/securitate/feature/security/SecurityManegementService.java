@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 class SecurityManegementService {
 
     private final DatabaseForSecurityManagement securityService;
-    private final SecurityEventsPublisher publisher;
+    private final SecurityManagementEventsPublisher publisher;
 
     public Page<RoleDO> getAllRoles(Pageable pageable) {
         return securityService.getAllRoles(pageable);

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-class SecurityEventsPublisher {
+class SecurityConfigEventsPublisher {
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);

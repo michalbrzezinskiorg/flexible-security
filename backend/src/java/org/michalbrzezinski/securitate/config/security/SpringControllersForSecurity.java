@@ -2,6 +2,7 @@ package org.michalbrzezinski.securitate.config.security;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.michalbrzezinski.securitate.config.security.port.DatabaseForSecurityConfiguration;
 import org.michalbrzezinski.securitate.feature.security.events.CreateControllerSystemEvent;
 import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -31,9 +32,9 @@ class SpringControllersForSecurity {
     private static final String PUT = "PUT";
     private static final String PATCH = "PATCH";
     private final HashSet<AnnotatedController> controllers = new HashSet<>();
-    private final SecurityEventsPublisher applicationEventPublisher;
+    private final SecurityConfigEventsPublisher applicationEventPublisher;
 
-    public SpringControllersForSecurity(DatabaseForSecurityConfiguration securityQueryService, SecurityEventsPublisher applicationEventPublisher) {
+    public SpringControllersForSecurity(DatabaseForSecurityConfiguration securityQueryService, SecurityConfigEventsPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
         addRequestMappingAnnotatedClassesToControllers();
         addNewControllersToDatabase(securityQueryService.findAllControllers());
