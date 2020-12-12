@@ -19,15 +19,12 @@ services:
     image: osixia/openldap:1.4.0
     container_name: ldap-host
     hostname: ldap-service
-    volumes:
-      - ./data/ldap/ldif_files:/ldif_files
     environment:
       - LDAP_ORGANISATION="Securitate Inc."
       - LDAP_DOMAIN=securitate.com
       - LDAP_ADMIN_PASSWORD=admin
     ports:
       - "389:389"
-    command: sh -c 'chmod +x /ldif_files/start.sh & /ldif_files/start.sh'
   phpldapadmin-service:
     image: osixia/phpldapadmin:0.9.0
     container_name: phpldapadmin-service
