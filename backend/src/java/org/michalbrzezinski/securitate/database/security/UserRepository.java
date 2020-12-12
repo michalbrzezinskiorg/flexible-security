@@ -9,7 +9,8 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-interface UserRepository extends JpaRepository<User, Integer> {
-    List<User> findAll();
-    Optional<User> findByLogin(String login);
+interface UserRepository extends JpaRepository<UserEntity, Integer> {
+    List<UserEntity> findAll();
+
+    Optional<UserEntity> findByLogin(String login);
 }

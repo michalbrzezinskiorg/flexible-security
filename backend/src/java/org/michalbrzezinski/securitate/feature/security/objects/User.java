@@ -12,7 +12,7 @@ import java.util.Set;
 @Value
 @Builder
 @AllArgsConstructor
-public class UserDO {
+public class User {
     Integer id;
     @Size(min = 3, max = 30)
     String name;
@@ -22,7 +22,7 @@ public class UserDO {
     String login;
     boolean active;
     @Singular
-    Set<PermissionDO> permissions;
+    Set<Permission> permissions;
     @Singular
-    Set<RoleDO> roles;
+    Set<Role> roles;
 }

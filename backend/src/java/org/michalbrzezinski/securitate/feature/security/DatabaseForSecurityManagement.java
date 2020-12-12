@@ -1,9 +1,9 @@
 package org.michalbrzezinski.securitate.feature.security;
 
-import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
-import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Controller;
+import org.michalbrzezinski.securitate.feature.security.objects.Permission;
+import org.michalbrzezinski.securitate.feature.security.objects.Role;
+import org.michalbrzezinski.securitate.feature.security.objects.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,17 +11,19 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DatabaseForSecurityManagement {
-    Optional<UserDO> getUser(Integer id);
+    Optional<User> getUser(Integer id);
 
-    Page<RoleDO> getAllRoles(Pageable pageable);
+    Page<Role> getAllRoles(Pageable pageable);
 
-    Page<UserDO> getAllUsers(Pageable pageable);
+    Page<User> getAllUsers(Pageable pageable);
 
-    Page<PermissionDO> getAllPermissions(Pageable pageable);
+    Page<Permission> getAllPermissions(Pageable pageable);
 
-    Page<ControllerDO> getAllControllers(Pageable pageable);
+    Page<Controller> getAllControllers(Pageable pageable);
 
-    Optional<RoleDO> getRoleById(Integer id);
+    Optional<Role> getRoleById(Integer id);
 
-    List<ControllerDO> getControllersByIds(List<Integer> collect);
+    List<Controller> getControllersByIds(List<Integer> collect);
+
+    Optional<User> getUserByLogin(String login);
 }

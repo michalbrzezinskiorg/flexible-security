@@ -10,12 +10,12 @@ import java.util.Set;
 @Value
 @Builder
 @AllArgsConstructor
-public class ControllerDO {
+public class Controller {
     Integer id;
     String controller;
     String method;
     String http;
-    Set<RoleDO> roles;
-    Set<PermissionDO> permissions;
+    Set<Role> roles;
+    Set<Permission> permissions;
     boolean active;
 }

@@ -1,20 +1,20 @@
 package org.michalbrzezinski.securitate.config.security.port;
 
-import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Controller;
+import org.michalbrzezinski.securitate.feature.security.objects.Role;
+import org.michalbrzezinski.securitate.feature.security.objects.User;
 
 import java.util.Optional;
 import java.util.Set;
 
 public interface DatabaseForSecurityConfiguration {
-    Set<ControllerDO> findAllControllers();
+    Set<Controller> findAllControllers();
 
-    Optional<UserDO> getByLogin(String login);
+    Optional<User> getByLogin(String login);
 
-    Optional<RoleDO> findRoleByName(String rolename);
+    Optional<Role> findRoleByName(String rolename);
 
     long countAll();
 
-    Iterable<ControllerDO> findControllersByUser(UserDO user);
+    Iterable<Controller> findControllersByUser(User user);
 }

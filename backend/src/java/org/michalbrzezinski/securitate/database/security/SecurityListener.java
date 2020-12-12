@@ -3,8 +3,8 @@ package org.michalbrzezinski.securitate.database.security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.michalbrzezinski.securitate.feature.security.events.*;
-import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
-import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Permission;
+import org.michalbrzezinski.securitate.feature.security.objects.Role;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,7 @@ class SecurityListener {
     @EventListener
     public void handleAddRoleEvent(CreatePermissionUserEvent event) {
         log.info("#===>  received event [{}]", event);
-        PermissionDO p = securityCommandService.addPermission(event.getPayload());
+        Permission p = securityCommandService.addPermission(event.getPayload());
         securityEventsPublisher.publish(PermissionCreatedSystemEvent.builder().payload(p).created(ZonedDateTime.now()).build());
     }
 
@@ -53,7 +53,7 @@ class SecurityListener {
     @EventListener
     public void handleAddRoleEvent(EditRoleAddControllerUserEvent event) {
         log.info("#===>  received event [{}]", event);
-        Optional<RoleDO> roleDO = securityCommandService.addControllerToRole(event.getPayload());
+        Optional<Role> roleDO = securityCommandService.addControllerToRole(event.getPayload());
         roleDO.ifPresent(r -> securityEventsPublisher.publish(EditedRoleControllerAddedSystemEvent.builder().payload(r).created(ZonedDateTime.now()).build()));
     }
 
@@ -61,8 +61,8 @@ class SecurityListener {
     @EventListener
     public void handleAddRoleEvent(CreateRoleUserEvent event) {
         log.info("#===>  received event [{}]", event);
-        RoleDO roleDO = securityCommandService.saveNewRoleCreatedByUserEvent(event.getPayload());
-        securityEventsPublisher.publish(RoleCreatedSystemEvent.builder().payload(roleDO).created(ZonedDateTime.now()).build());
+        Role role = securityCommandService.saveNewRoleCreatedByUserEvent(event.getPayload());
+        securityEventsPublisher.publish(RoleCreatedSystemEvent.builder().payload(role).created(ZonedDateTime.now()).build());
     }
 
 

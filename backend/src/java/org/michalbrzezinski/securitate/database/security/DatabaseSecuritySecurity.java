@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.michalbrzezinski.securitate.config.security.port.DatabaseForSecurityConfiguration;
 import org.michalbrzezinski.securitate.feature.security.DatabaseForSecurityManagement;
-import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
-import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Controller;
+import org.michalbrzezinski.securitate.feature.security.objects.Permission;
+import org.michalbrzezinski.securitate.feature.security.objects.Role;
+import org.michalbrzezinski.securitate.feature.security.objects.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,37 +29,37 @@ class DatabaseSecuritySecurity implements DatabaseForSecurityConfiguration, Data
     private final CustomEntityMapper customEntityMapper;
 
     @Override
-    public Set<ControllerDO> findAllControllers() {
+    public Set<Controller> findAllControllers() {
         log.info("findAllControllers");
-        Set<Controller> all = controllerRepository.findAll();
+        Set<ControllerEntity> all = controllerRepository.findAll();
         return all.stream()
                 .map(c -> customEntityMapper.map(c))
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Optional<RoleDO> findRoleByName(String roleName) {
+    public Optional<Role> findRoleByName(String roleName) {
         log.info("findRoleByName [{}]", roleName);
         return roleRepository.findByName(roleName).map(a -> customEntityMapper.map(a));
     }
 
     @Override
-    public Optional<UserDO> getByLogin(String login) {
+    public Optional<User> getByLogin(String login) {
         log.info("getByLogin [{}]", login);
-        Optional<User> byLogin = userRepository.findByLogin(login);
+        Optional<UserEntity> byLogin = userRepository.findByLogin(login);
         if (byLogin.isEmpty()) return Optional.empty();
         return Optional.ofNullable(customEntityMapper.map(byLogin.get()));
     }
 
     @Override
-    public Set<ControllerDO> findControllersByUser(UserDO user) {
+    public Set<Controller> findControllersByUser(User user) {
         log.info("findControllersByUser [{}]", user);
-        Set<ControllerDO> controllerDOS = controllerRepository.findByUser(user.getId())
+        Set<Controller> controllers = controllerRepository.findByUser(user.getId())
                 .stream()
                 .map(c -> customEntityMapper.map(c))
                 .collect(Collectors.toSet());
-        log.info("found Controllers [{}]", controllerDOS);
-        return controllerDOS;
+        log.info("found Controllers [{}]", controllers);
+        return controllers;
     }
 
     @Override
@@ -69,39 +69,44 @@ class DatabaseSecuritySecurity implements DatabaseForSecurityConfiguration, Data
     }
 
     @Override
-    public Optional<UserDO> getUser(Integer id) {
+    public Optional<User> getUser(Integer id) {
         return userRepository.findById(id).map(customEntityMapper::map);
     }
 
     @Override
-    public Page<RoleDO> getAllRoles(Pageable pageable) {
+    public Page<Role> getAllRoles(Pageable pageable) {
         return roleRepository.findAll(pageable).map(customEntityMapper::map);
     }
 
     @Override
-    public Page<UserDO> getAllUsers(Pageable pageable) {
+    public Page<User> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable).map(customEntityMapper::map);
     }
 
     @Override
-    public Page<PermissionDO> getAllPermissions(Pageable pageable) {
+    public Page<Permission> getAllPermissions(Pageable pageable) {
         return permissionRepository.findAll(pageable).map(customEntityMapper::map);
     }
 
     @Override
-    public Page<ControllerDO> getAllControllers(Pageable pageable) {
+    public Page<Controller> getAllControllers(Pageable pageable) {
         return controllerRepository.findAll(pageable).map(customEntityMapper::map);
     }
 
     @Override
-    public Optional<RoleDO> getRoleById(Integer id) {
+    public Optional<Role> getRoleById(Integer id) {
         return roleRepository.findById(id).map(customEntityMapper::map);
     }
 
     @Override
-    public List<ControllerDO> getControllersByIds(List<Integer> collect) {
+    public List<Controller> getControllersByIds(List<Integer> collect) {
         return controllerRepository.findByIdIn(collect).stream()
                 .map(customEntityMapper::map)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<User> getUserByLogin(String login) {
+        return userRepository.findByLogin(login).map(customEntityMapper::map);
     }
 }

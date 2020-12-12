@@ -1,9 +1,9 @@
 package org.michalbrzezinski.securitate.database.security;
 
-import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
-import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Controller;
+import org.michalbrzezinski.securitate.feature.security.objects.Permission;
+import org.michalbrzezinski.securitate.feature.security.objects.Role;
+import org.michalbrzezinski.securitate.feature.security.objects.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -13,61 +13,50 @@ import java.util.stream.Collectors;
 @Component
 class CustomEntityMapper {
 
-    Role map(RoleDO role) {
+    RoleEntity map(Role role) {
+        return RoleEntity.builder()
+                .id(role.getId())
+                .name(role.getName())
+                .active(role.getActive())
+                .build();
+    }
+
+    Role map(RoleEntity roleEntity) {
         return Role.builder()
-                .id(role.getId())
-                .name(role.getName())
-                .active(role.getActive())
+                .id(roleEntity.getId())
+                .active(roleEntity.getActive())
+                .name(roleEntity.getName())
                 .build();
     }
 
-    RoleDO map(Role role) {
-        return RoleDO.builder()
-                .id(role.getId())
-                .active(role.getActive())
-                .name(role.getName())
+    UserEntity map(User user) {
+        return UserEntity.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .login(user.getLogin())
+                .active(user.isActive())
                 .build();
     }
 
-    User map(UserDO user) {
+    User map(UserEntity userEntity) {
         return User.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .surname(user.getSurname())
-                .login(user.getLogin())
-                .active(user.isActive())
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .surname(userEntity.getSurname())
+                .login(userEntity.getLogin())
+                .active(userEntity.isActive())
                 .build();
     }
 
-    UserDO map(User user) {
-        return UserDO.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .surname(user.getSurname())
-                .login(user.getLogin())
-                .active(user.isActive())
-                .build();
-    }
-
-    Permission map(PermissionDO r) {
-        return Permission.builder()
+    PermissionEntity map(Permission r) {
+        return PermissionEntity.builder()
                 .id(r.getId())
                 .active(r.isActive())
                 .build();
     }
 
-    ControllerDO map(Controller c) {
-        return ControllerDO.builder()
-                .id(c.getId())
-                .active(c.isActive())
-                .http(c.getHttp())
-                .method(c.getMethod())
-                .controller(c.getController())
-                .id(c.getId())
-                .build();
-    }
-
-    Controller map(ControllerDO c) {
+    Controller map(ControllerEntity c) {
         return Controller.builder()
                 .id(c.getId())
                 .active(c.isActive())
@@ -78,8 +67,19 @@ class CustomEntityMapper {
                 .build();
     }
 
-    public Permission map(PermissionDO permission, User createdBy, User createdFor, Collection<Controller> controllers) {
-        return Permission.builder()
+    ControllerEntity map(Controller c) {
+        return ControllerEntity.builder()
+                .id(c.getId())
+                .active(c.isActive())
+                .http(c.getHttp())
+                .method(c.getMethod())
+                .controller(c.getController())
+                .id(c.getId())
+                .build();
+    }
+
+    public PermissionEntity map(Permission permission, UserEntity createdBy, UserEntity createdFor, Collection<ControllerEntity> controllers) {
+        return PermissionEntity.builder()
                 .createdBy(createdBy)
                 .controllers(controllers)
                 .fromDate(permission.getFromDate())
@@ -88,8 +88,8 @@ class CustomEntityMapper {
                 .build();
     }
 
-    public PermissionDO map(Permission p) {
-        return PermissionDO.builder()
+    public Permission map(PermissionEntity p) {
+        return Permission.builder()
                 .fromDate(p.getFromDate())
                 .toDate(p.getToDate())
                 .createdBy(map(p.getCreatedBy()))
@@ -99,7 +99,7 @@ class CustomEntityMapper {
                 .build();
     }
 
-    private Collection<? extends ControllerDO> map(Set<Controller> controllers) {
+    private Collection<? extends Controller> map(Set<ControllerEntity> controllers) {
         return controllers.stream().map(this::map).collect(Collectors.toList());
     }
 }

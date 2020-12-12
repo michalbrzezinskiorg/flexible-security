@@ -16,7 +16,7 @@ import static javax.persistence.CascadeType.ALL;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"roles", "permissions"})
 @ToString(exclude = {"roles", "permissions"})
-class User {
+class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -28,9 +28,9 @@ class User {
     @JoinColumn(name = "permission_for")
     @Singular
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<Permission> permissions;
+    private Set<PermissionEntity> permissions;
     @ManyToMany(fetch = FetchType.LAZY, cascade = ALL)
     @Singular
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<Role> roles;
+    private Set<RoleEntity> roles;
 }

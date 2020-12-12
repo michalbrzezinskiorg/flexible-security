@@ -4,7 +4,7 @@ package org.michalbrzezinski.securitate.config.security;
 import lombok.extern.slf4j.Slf4j;
 import org.michalbrzezinski.securitate.config.security.port.DatabaseForSecurityConfiguration;
 import org.michalbrzezinski.securitate.feature.security.events.CreateControllerSystemEvent;
-import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Controller;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.DependsOn;
@@ -46,7 +46,7 @@ class SpringControllersForSecurity {
                 .collect(Collectors.toSet());
     }
 
-    private void addNewControllersToDatabase(Set<ControllerDO> existingControllers) {
+    private void addNewControllersToDatabase(Set<Controller> existingControllers) {
         controllers.parallelStream()
                 .map(this::getAnnotatedControllerActionFunction)
                 .filter(c -> isUnique(existingControllers, c))
@@ -59,12 +59,12 @@ class SpringControllersForSecurity {
                 .forEach(applicationEventPublisher::publish);
     }
 
-    private boolean isUnique(Set<ControllerDO> existingControllers, ControllerDO c) {
+    private boolean isUnique(Set<Controller> existingControllers, Controller c) {
         return !existingControllers.stream().anyMatch(e -> stringifyController(e).equals(stringifyController(c)));
     }
 
-    private ControllerDO getAnnotatedControllerActionFunction(AnnotatedController c) {
-        return ControllerDO.builder()
+    private Controller getAnnotatedControllerActionFunction(AnnotatedController c) {
+        return Controller.builder()
                 .controller(c.getClassLevelAnnotation())
                 .method(c.getMethodLevelAnnotation())
                 .http(c.getHttpMethod())

@@ -13,15 +13,15 @@ import java.util.Set;
 
 @Repository
 @Transactional
-interface ControllerRepository extends PagingAndSortingRepository<Controller, Integer> {
+interface ControllerRepository extends PagingAndSortingRepository<ControllerEntity, Integer> {
 
-    Set<Controller> findAll();
+    Set<ControllerEntity> findAll();
 
-    Page<Controller> findAll(Pageable pageable);
+    Page<ControllerEntity> findAll(Pageable pageable);
 
-    @Query("select distinct c from Controller c left join fetch c.permissions p left join fetch c.roles r left join fetch r.users u1 left join fetch p.permissionFor u2 where u1.id = :user or u2.id = :user")
-    List<Controller> findByUser(Integer user);
+    @Query("select distinct c from ControllerEntity c left join fetch c.permissions p left join fetch c.roles r left join fetch r.users u1 left join fetch p.permissionFor u2 where u1.id = :user or u2.id = :user")
+    List<ControllerEntity> findByUser(Integer user);
 
-    List<Controller> findByIdIn(List<Integer> listOfIds);
+    List<ControllerEntity> findByIdIn(List<Integer> listOfIds);
 
 }

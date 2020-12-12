@@ -14,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"permissions", "roles"})
 @ToString(exclude = {"permissions", "roles"})
-class Controller {
+class ControllerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,9 +23,9 @@ class Controller {
     private String method;
     private String http;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "controllers")
-    private Set<Role> roles;
+    private Set<RoleEntity> roles;
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Permission> permissions;
+    private Set<PermissionEntity> permissions;
     @NonNull
     private boolean active;
 }

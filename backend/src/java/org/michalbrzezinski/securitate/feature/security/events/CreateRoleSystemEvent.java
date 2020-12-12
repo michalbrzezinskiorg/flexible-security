@@ -2,17 +2,17 @@ package org.michalbrzezinski.securitate.feature.security.events;
 
 import lombok.Builder;
 import lombok.Value;
-import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Role;
 
 import java.time.ZonedDateTime;
 
 @Value
 public class CreateRoleSystemEvent {
     ZonedDateTime created;
-    RoleDO payload;
+    Role payload;
 
     @Builder
-    public CreateRoleSystemEvent(ZonedDateTime created, RoleDO payload) {
+    public CreateRoleSystemEvent(ZonedDateTime created, Role payload) {
         this.created = created;
         this.payload = payload;
     }

@@ -11,13 +11,13 @@ import java.util.Set;
 @Value
 @Builder
 @AllArgsConstructor
-public class RoleDO {
+public class Role {
     int id;
     String name;
     @Singular
-    Set<ControllerDO> controllers;
+    Set<Controller> controllers;
     @Singular
-    Set<UserDO> users;
+    Set<User> users;
     Boolean active;
     LocalDateTime created;
     LocalDateTime edited;

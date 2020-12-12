@@ -19,7 +19,7 @@ import static javax.persistence.CascadeType.ALL;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"controllers"})
 @ToString(exclude = {"controllers"})
-class Permission {
+class PermissionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,16 +30,16 @@ class Permission {
     @ManyToOne(fetch = FetchType.LAZY, cascade = ALL)
     @JoinColumn(name = "created_by")
     @Fetch(FetchMode.JOIN)
-    private User createdBy;
+    private UserEntity createdBy;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "permission_for")
     @Fetch(FetchMode.JOIN)
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private User permissionFor;
+    private UserEntity permissionFor;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "permissions", cascade = ALL)
     @Fetch(FetchMode.JOIN)
     @Singular
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<Controller> controllers;
+    private Set<ControllerEntity> controllers;
 
 }

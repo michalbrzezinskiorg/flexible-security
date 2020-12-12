@@ -11,10 +11,10 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-interface RoleRepository extends JpaRepository<Role, Integer> {
-    Page<Role> findAll(Pageable pageable);
+interface RoleRepository extends JpaRepository<RoleEntity, Integer> {
+    Page<RoleEntity> findAll(Pageable pageable);
 
-    List<Role> findAll();
+    List<RoleEntity> findAll();
 
-    Optional<Role> findByName(String roleName);
+    Optional<RoleEntity> findByName(String roleName);
 }

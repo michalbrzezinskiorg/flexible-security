@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.michalbrzezinski.securitate.config.security.port.DatabaseForSecurityConfiguration;
 import org.michalbrzezinski.securitate.feature.security.events.CreateRoleSystemEvent;
 import org.michalbrzezinski.securitate.feature.security.events.CreateUserSystemEvent;
-import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Controller;
+import org.michalbrzezinski.securitate.feature.security.objects.Role;
+import org.michalbrzezinski.securitate.feature.security.objects.User;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -33,14 +33,14 @@ class CustomAuthenticationProvider {
         Set<Authority> authorities = new HashSet<>();
         String displayName = userData.getStringAttribute("displayName");
         String email = userData.getStringAttribute("mail");
-        UserDO user = getUser(email, displayName);
+        User user = getUser(email, displayName);
         setPermissions(user, authorities);
         log.info(">>>>> AUTHORIZATION END <<<<< [{}] granted for [{}]", username, authorities);
         return authorities;
     }
 
-    private UserDO getUser(String login, String displayName) {
-        Optional<UserDO> oUser = securityQueryService.getByLogin(login);
+    private User getUser(String login, String displayName) {
+        Optional<User> oUser = securityQueryService.getByLogin(login);
         if (oUser.isEmpty()) {
             log.debug("adding new user to database username [{}] ", displayName);
             return saveUser(login, displayName);
@@ -48,7 +48,7 @@ class CustomAuthenticationProvider {
         return oUser.get();
     }
 
-    private UserDO saveUser(String login, String displayName) {
+    private User saveUser(String login, String displayName) {
         if (isFirstUser()) {
             log.info("first user");
             return saveNewUser(login, ADMIN, displayName);
@@ -62,10 +62,10 @@ class CustomAuthenticationProvider {
         return securityQueryService.countAll() == 0L;
     }
 
-    private UserDO saveNewUser(String login, String roleName, String displayName) {
+    private User saveNewUser(String login, String roleName, String displayName) {
         log.info("creating user account [{}]", login);
         String[] s = displayName.split(" ");
-        UserDO u = UserDO.builder()
+        User u = User.builder()
                 .role(assignRole(roleName))
                 .name(s[0])
                 .surname(displayName)
@@ -78,13 +78,13 @@ class CustomAuthenticationProvider {
         return u;
     }
 
-    private RoleDO assignRole(String rolename) {
+    private Role assignRole(String rolename) {
         log.info("assignRole [{}]", rolename);
-        Optional<RoleDO> oRole = securityQueryService.findRoleByName(rolename);
+        Optional<Role> oRole = securityQueryService.findRoleByName(rolename);
         if (oRole.isEmpty()) {
             log.info("creating role [{}]", rolename);
-            Set<ControllerDO> controllers = getControllerDOS(rolename);
-            RoleDO role = RoleDO.builder().name(rolename).controllers(controllers).build();
+            Set<Controller> controllers = getControllerDOS(rolename);
+            Role role = Role.builder().name(rolename).controllers(controllers).build();
             try {
                 log.info("saving [{}]", role);
                 applicationEventPublisher.publish(
@@ -100,18 +100,18 @@ class CustomAuthenticationProvider {
         return oRole.get();
     }
 
-    private Set<ControllerDO> getControllerDOS(String roleName) {
+    private Set<Controller> getControllerDOS(String roleName) {
         if (ADMIN.equals(roleName))
             return securityQueryService.findAllControllers();
         else
             return new HashSet<>();
     }
 
-    private void setPermissions(UserDO user, Set<Authority> authorities) {
+    private void setPermissions(User user, Set<Authority> authorities) {
         securityQueryService.findControllersByUser(user).forEach(c -> addControllersToAuthorities(c, authorities));
     }
 
-    private void addControllersToAuthorities(ControllerDO c, Set<Authority> authorities) {
+    private void addControllersToAuthorities(Controller c, Set<Authority> authorities) {
         log.info("addController [{}] to authorities [{}]", c, authorities);
         String stringified = StringifiyController.stringifyController(c.getController(), c.getMethod(), c.getHttp());
         log.info("stringified [{}] to ControllerDO [{}]", stringified, c);

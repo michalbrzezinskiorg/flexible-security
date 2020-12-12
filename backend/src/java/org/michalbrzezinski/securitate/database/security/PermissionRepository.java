@@ -10,10 +10,10 @@ import java.util.Set;
 
 @Repository()
 @Transactional
-interface PermissionRepository extends PagingAndSortingRepository<Permission, Long> {
-    Set<Permission> findAll();
+interface PermissionRepository extends PagingAndSortingRepository<PermissionEntity, Long> {
+    Set<PermissionEntity> findAll();
 
-    Page<Permission> findAll(Pageable pageable);
+    Page<PermissionEntity> findAll(Pageable pageable);
 
-    Permission save(Permission permission);
+    PermissionEntity save(PermissionEntity permissionEntity);
 }

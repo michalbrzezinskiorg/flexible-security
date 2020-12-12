@@ -11,13 +11,13 @@ import java.util.Set;
 @Value
 @Builder
 @AllArgsConstructor
-public class PermissionDO {
+public class Permission {
     Long id;
     ZonedDateTime fromDate;
     ZonedDateTime toDate;
     boolean active;
-    UserDO createdBy;
-    UserDO permissionFor;
+    User createdBy;
+    User permissionFor;
     @Singular
-    Set<ControllerDO> controllers;
+    Set<Controller> controllers;
 }

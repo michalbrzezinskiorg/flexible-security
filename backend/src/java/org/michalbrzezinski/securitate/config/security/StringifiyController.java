@@ -1,6 +1,6 @@
 package org.michalbrzezinski.securitate.config.security;
 
-import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Controller;
 import org.springframework.http.HttpMethod;
 
 class StringifiyController {
@@ -11,8 +11,8 @@ class StringifiyController {
         return stringified;
     }
 
-    public static String stringifyController(ControllerDO controllerDO) {
-        String s = stringifyController(controllerDO.getController(), controllerDO.getMethod(), controllerDO.getHttp());
+    public static String stringifyController(Controller controller) {
+        String s = stringifyController(controller.getController(), controller.getMethod(), controller.getHttp());
         return s;
     }
 

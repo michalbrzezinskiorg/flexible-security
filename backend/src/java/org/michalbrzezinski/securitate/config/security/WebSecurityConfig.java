@@ -108,8 +108,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests().antMatchers(PUBLIC_PLACES).permitAll();
     }
 
-    private void
-    options(HttpSecurity httpSecurity) throws Exception {
+    private void options(HttpSecurity httpSecurity) throws Exception {
         log.info("options");
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll();
     }

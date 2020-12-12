@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.michalbrzezinski.securitate.feature.security.events.CreatePermissionUserEvent;
 import org.michalbrzezinski.securitate.feature.security.events.CreateRoleUserEvent;
 import org.michalbrzezinski.securitate.feature.security.events.EditRoleAddControllerUserEvent;
-import org.michalbrzezinski.securitate.feature.security.objects.ControllerDO;
-import org.michalbrzezinski.securitate.feature.security.objects.PermissionDO;
-import org.michalbrzezinski.securitate.feature.security.objects.RoleDO;
-import org.michalbrzezinski.securitate.feature.security.objects.UserDO;
+import org.michalbrzezinski.securitate.feature.security.objects.Controller;
+import org.michalbrzezinski.securitate.feature.security.objects.Permission;
+import org.michalbrzezinski.securitate.feature.security.objects.Role;
+import org.michalbrzezinski.securitate.feature.security.objects.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,34 +25,34 @@ class SecurityManegementService {
     private final DatabaseForSecurityManagement securityService;
     private final SecurityManagementEventsPublisher publisher;
 
-    public Page<RoleDO> getAllRoles(Pageable pageable) {
+    public Page<Role> getAllRoles(Pageable pageable) {
         return securityService.getAllRoles(pageable);
     }
 
-    public Page<UserDO> getAllUsers(Pageable pageable) {
+    public Page<User> getAllUsers(Pageable pageable) {
         return securityService.getAllUsers(pageable);
     }
 
-    public Page<PermissionDO> getAllPermissions(Pageable pageable) {
+    public Page<Permission> getAllPermissions(Pageable pageable) {
         return securityService.getAllPermissions(pageable);
     }
 
-    public Page<ControllerDO> getAllControllers(Pageable pageable) {
+    public Page<Controller> getAllControllers(Pageable pageable) {
         return securityService.getAllControllers(pageable);
     }
 
-    public void addPermission(PermissionDO permissionDO) {
-        Optional<UserDO> permissionFor = securityService.getUser(permissionDO.getPermissionFor().getId());
+    public void addPermission(Permission permission) {
+        Optional<User> permissionFor = securityService.getUser(permission.getPermissionFor().getId());
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<UserDO> permissionBy = securityService.getUser(Integer.parseInt(userId));
+        Optional<User> permissionBy = securityService.getUser(Integer.parseInt(userId));
         permissionFor.flatMap(
                 forUser -> permissionBy.map(byUser ->
-                        PermissionDO.builder()
+                        Permission.builder()
                                 .permissionFor(forUser)
                                 .createdBy(byUser)
-                                .controllers(permissionDO.getControllers())
-                                .fromDate(Optional.ofNullable(permissionDO.getFromDate()).orElse(ZonedDateTime.now()))
-                                .toDate(Optional.ofNullable(permissionDO.getToDate()).orElse(ZonedDateTime.now().plusMonths(1)))
+                                .controllers(permission.getControllers())
+                                .fromDate(Optional.ofNullable(permission.getFromDate()).orElse(ZonedDateTime.now()))
+                                .toDate(Optional.ofNullable(permission.getToDate()).orElse(ZonedDateTime.now().plusMonths(1)))
                                 .build()))
                 .ifPresent(p ->
                         publisher.publish(CreatePermissionUserEvent
@@ -62,15 +62,15 @@ class SecurityManegementService {
                                 .build()));
     }
 
-    public void addControllerToRole(RoleDO roleDO) {
-        Optional<RoleDO> role = securityService.getRoleById(roleDO.getId());
-        List<ControllerDO> controllers = securityService
+    public void addControllerToRole(Role roleDO) {
+        Optional<Role> role = securityService.getRoleById(roleDO.getId());
+        List<Controller> controllers = securityService
                 .getControllersByIds(roleDO.getControllers()
                         .stream()
-                        .map(ControllerDO::getId)
+                        .map(Controller::getId)
                         .collect(Collectors.toList()));
 
-        role.map(r -> RoleDO.builder()
+        role.map(r -> Role.builder()
                 .id(r.getId())
                 .controllers(controllers)
                 .build())
@@ -80,14 +80,14 @@ class SecurityManegementService {
                                 .build()));
     }
 
-    public void createRole(RoleDO roleDO) {
+    public void createRole(Role role) {
         publisher.publish(CreateRoleUserEvent.builder()
-                .payload(roleDO)
+                .payload(role)
                 .created(ZonedDateTime.now())
                 .build());
     }
 
-    public void addRoleToUser(RoleDO roleDO) {
+    public void addRoleToUser(Role role) {
 
     }
 }
