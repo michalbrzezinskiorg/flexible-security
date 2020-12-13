@@ -45,8 +45,6 @@ services:
       PMA_PORT: 3306
     ports:
       - 88:80
-    volumes:
-      - ./sessions
 networks:
   secured:
     driver: bridge

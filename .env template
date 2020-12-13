@@ -1,5 +1,5 @@
-LDAP_HOSTNAME=ldap://localhost:389
-LDAP_MANAGER_USERNAME=admin
+USER_SEARCH_FILTER=(|(cn\={0})(mail\={0}))
+USER_SEARCH_BASE=ou\=People
 LDAP_MANAGER_PASSWORD=admin
-USER_SEARCH_BASE=ou=People,dc=securitate,dc=com
-USER_SEARCH_FILTER=(|(cn={0})(mail={0}))
+LDAP_MANAGER_USERNAME=cn\=admin,dc\=securitate,dc\=com
+LDAP_HOSTNAME=localhost:389/dc\=securitate,dc\=com
