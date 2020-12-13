@@ -8,7 +8,6 @@ gecos: michal
 gidnumber: 1
 homedirectory: /home/michal
 loginshell: /bin/bash
-displayName: Michał Brzeziński
 objectclass: top
 objectclass: account
 objectclass: posixAccount
@@ -24,7 +23,6 @@ dn: cn=piotr,ou=People,dc=securitate,dc=com
 cn: piotr
 gecos: piotr
 gidnumber: 2
-displayName: Piotr Liński
 homedirectory: /home/piotr
 loginshell: /bin/bash
 objectclass: top
@@ -42,7 +40,6 @@ dn: cn=mateusz,ou=People,dc=securitate,dc=com
 cn: mateusz
 gecos: mateusz
 gidnumber: 3
-displayName: Mateusz Kiński
 homedirectory: /home/mateusz
 loginshell: /bin/bash
 objectclass: top
@@ -62,7 +59,6 @@ gecos: adam
 gidnumber: 4
 homedirectory: /home/adam
 loginshell: /bin/bash
-displayName: Adam Adamski
 objectclass: top
 objectclass: account
 objectclass: posixAccount
