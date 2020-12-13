@@ -11,8 +11,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.util.ArrayList;
@@ -30,7 +30,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String PUBLIC = "/public";
     private static final String LOGOUT = "/users/logout";
-    private static final String[] PUBLIC_PLACES = {PUBLIC, LOGOUT};
+    private static final String SWAGGER = "/swagger-resources/**";
+
+    private static final String[] PUBLIC_PLACES = {PUBLIC, LOGOUT, SWAGGER};
     private final SpringControllersForSecurity springControllersForSecurity;
     private final CustomAuthenticationProvider authenticationProvider;
     @Value("${ldap.user.search.base}")
@@ -73,7 +75,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .contextSource()
                 .url(url)
                 .managerDn(username)
-                .managerPassword(password);
+                .managerPassword(password).and()
+                .passwordCompare()
+                .passwordAttribute("userpassword")
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 
     private ArrayList<String> getNonPublicControllers(List<String> publicPlacesAsList) {
@@ -125,19 +130,25 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
-    private void setHttpSecurityForAuthorities(final HttpSecurity httpSecurity, List<String> nonPublicControllers) throws Exception {
-        final var expr = httpSecurity.authorizeRequests();
-        nonPublicControllers.forEach(auth -> nonPublicController(expr, auth));
+    private void setHttpSecurityForAuthorities(final HttpSecurity httpSecurity, List<String> nonPublicControllers) {
+        nonPublicControllers.forEach(auth -> nonPublicController(httpSecurity, auth));
     }
 
-    private void nonPublicController(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expr, String auth) {
+    private void nonPublicController(HttpSecurity httpSecurity, String auth) {
         HttpMethod httpMethod = getHttpMethodFromAuthority(auth);
         String local = auth.substring(0, auth.lastIndexOf("$"));
         log.info(" >>>> setHttpSecurityForAuthorities httpMethod: [{}] uri: [{}] needs authority: [{}]", httpMethod, local, auth);
-        if (httpMethod != null)
-            expr.antMatchers(httpMethod, local).hasAuthority("ROLE_" + auth);
-        else
+        if (httpMethod != null) {
+            authorize(httpSecurity, auth, httpMethod, local);
+        } else
             log.error("auth: [{}]", auth);
     }
 
+    private void authorize(HttpSecurity httpSecurity, String auth, HttpMethod httpMethod, String local) {
+        try {
+            httpSecurity.authorizeRequests().antMatchers(httpMethod, local).hasAuthority("ROLE_" + auth);
+        } catch (Exception e) {
+            log.error("pron [{}]", e.getMessage());
+        }
+    }
 }

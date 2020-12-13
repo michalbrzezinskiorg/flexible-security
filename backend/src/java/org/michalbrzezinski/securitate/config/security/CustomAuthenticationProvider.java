@@ -64,10 +64,9 @@ class CustomAuthenticationProvider {
 
     private User saveNewUser(String login, String roleName, String displayName) {
         log.info("creating user account [{}]", login);
-        String[] s = displayName.split(" ");
         User u = User.builder()
                 .role(assignRole(roleName))
-                .name(s[0])
+                .name(displayName)
                 .surname(displayName)
                 .login(login)
                 .build();

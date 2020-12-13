@@ -2,20 +2,74 @@ dn: ou=People,dc=securitate,dc=com
 ou: People
 objectClass: organizationalUnit
 
-dn: cn=user1,ou=People,dc=securitate,dc=com
-myadditionnalAttr2: Value2
-myadditionnalAttr: Value1
-sn: My User1
-mail: user1@securitate.com
-userPassword: user1
-cn: user1
-objectClass: personnel
+dn: cn=michal,ou=People,dc=securitate,dc=com
+cn: michal
+gecos: michal
+gidnumber: 1
+homedirectory: /home/michal
+loginshell: /bin/bash
+displayName: Michał Brzeziński
+objectclass: top
+objectclass: account
+objectclass: posixAccount
+objectclass: shadowAccount
+shadowlastchange: 0
+shadowmax: 0
+shadowwarning: 0
+uid: michal
+uidnumber: 17000
+userpassword: michal
 
-dn: cn=user2,ou=People,dc=securitate,dc=com
-myadditionnalAttr2: Value2
-myadditionnalAttr: Value1
-sn: My User2
-mail: user2@securitate.com
-userPassword: user2
-cn: user2
-objectClass: personnel
+dn: cn=piotr,ou=People,dc=securitate,dc=com
+cn: piotr
+gecos: piotr
+gidnumber: 2
+displayName: Piotr Liński
+homedirectory: /home/piotr
+loginshell: /bin/bash
+objectclass: top
+objectclass: account
+objectclass: posixAccount
+objectclass: shadowAccount
+shadowlastchange: 0
+shadowmax: 0
+shadowwarning: 0
+uid: piotr
+uidnumber: 17001
+userpassword: piotr
+
+dn: cn=mateusz,ou=People,dc=securitate,dc=com
+cn: mateusz
+gecos: mateusz
+gidnumber: 3
+displayName: Mateusz Kiński
+homedirectory: /home/mateusz
+loginshell: /bin/bash
+objectclass: top
+objectclass: account
+objectclass: posixAccount
+objectclass: shadowAccount
+shadowlastchange: 0
+shadowmax: 0
+shadowwarning: 0
+uid: mateusz
+uidnumber: 17002
+userpassword: mateusz
+
+dn: cn=adam,ou=People,dc=securitate,dc=com
+cn: adam
+gecos: adam
+gidnumber: 4
+homedirectory: /home/adam
+loginshell: /bin/bash
+displayName: Adam Adamski
+objectclass: top
+objectclass: account
+objectclass: posixAccount
+objectclass: shadowAccount
+shadowlastchange: 0
+shadowmax: 0
+shadowwarning: 0
+uid: adam
+uidnumber: 17003
+userpassword: adam
