@@ -16,8 +16,8 @@ public class Permission {
     ZonedDateTime fromDate;
     ZonedDateTime toDate;
     boolean active;
-    User createdBy;
-    User permissionFor;
+    String createdBy;
+    String permissionFor;
     @Singular
     Set<Controller> controllers;
 }

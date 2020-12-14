@@ -80,7 +80,7 @@ class CustomEntityMapper {
 
     public PermissionEntity map(Permission permission, UserEntity createdBy, UserEntity createdFor, Collection<ControllerEntity> controllers) {
         return PermissionEntity.builder()
-                .createdBy(createdBy)
+                .createdBy(createdBy.getLogin())
                 .controllers(controllers)
                 .fromDate(permission.getFromDate())
                 .active(permission.isActive())
@@ -92,7 +92,7 @@ class CustomEntityMapper {
         return Permission.builder()
                 .fromDate(p.getFromDate())
                 .toDate(p.getToDate())
-                .createdBy(map(p.getCreatedBy()))
+                .createdBy(p.getCreatedBy())
                 .id(p.getId())
                 .controllers(map(p.getControllers()))
                 .active(p.isActive())
@@ -101,5 +101,32 @@ class CustomEntityMapper {
 
     private Collection<? extends Controller> map(Set<ControllerEntity> controllers) {
         return controllers.stream().map(this::map).collect(Collectors.toList());
+    }
+
+    public User deepMap(UserEntity userEntity) {
+        return User.builder()
+                .id(userEntity.getId())
+                .active(userEntity.isActive())
+                .name(userEntity.getName())
+                .login(userEntity.getLogin())
+                .roles(userEntity.getRoles().stream().map(this::deepMap).collect(Collectors.toSet()))
+                .permissions(userEntity.getPermissions().stream().map(this::deepMap).collect(Collectors.toSet()))
+                .build();
+    }
+
+    private Permission deepMap(PermissionEntity permissionEntity) {
+        return Permission.builder()
+                .id(permissionEntity.getId())
+                .active(permissionEntity.isActive())
+                .controllers(permissionEntity.getControllers().stream().map(this::map).collect(Collectors.toSet()))
+                .build();
+    }
+
+    private Role deepMap(RoleEntity roleEntity) {
+        return Role.builder()
+                .id(roleEntity.getId())
+                .active(roleEntity.getActive())
+                .controllers(roleEntity.getControllers().stream().map(this::map).collect(Collectors.toSet()))
+                .build();
     }
 }

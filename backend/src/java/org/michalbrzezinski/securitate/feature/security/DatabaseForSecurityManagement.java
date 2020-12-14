@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DatabaseForSecurityManagement {
-    Optional<User> getUser(Integer id);
+    Optional<User> getUser(String id);
 
     Page<Role> getAllRoles(Pageable pageable);
 

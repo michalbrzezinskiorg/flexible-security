@@ -14,8 +14,6 @@ import static javax.persistence.CascadeType.ALL;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"roles", "permissions"})
-@ToString(exclude = {"roles", "permissions"})
 class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

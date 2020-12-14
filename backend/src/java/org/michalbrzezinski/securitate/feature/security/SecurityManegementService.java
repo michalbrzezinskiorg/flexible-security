@@ -42,14 +42,14 @@ class SecurityManegementService {
     }
 
     public void addPermission(Permission permission) {
-        Optional<User> permissionFor = securityService.getUser(permission.getPermissionFor().getId());
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> permissionBy = securityService.getUser(Integer.parseInt(userId));
+        Optional<User> permissionFor = securityService.getUser(permission.getPermissionFor());
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> permissionBy = securityService.getUser(userLogin);
         permissionFor.flatMap(
                 forUser -> permissionBy.map(byUser ->
                         Permission.builder()
-                                .permissionFor(forUser)
-                                .createdBy(byUser)
+                                .permissionFor(forUser.getLogin())
+                                .createdBy(byUser.getLogin())
                                 .controllers(permission.getControllers())
                                 .fromDate(Optional.ofNullable(permission.getFromDate()).orElse(ZonedDateTime.now()))
                                 .toDate(Optional.ofNullable(permission.getToDate()).orElse(ZonedDateTime.now().plusMonths(1)))

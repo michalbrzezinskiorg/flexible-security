@@ -61,8 +61,7 @@ class SecurityListener {
     @EventListener
     public void handleAddRoleEvent(CreateRoleUserEvent event) {
         log.info("#===>  received event [{}]", event);
-        Role role = securityCommandService.saveNewRoleCreatedByUserEvent(event.getPayload());
-        securityEventsPublisher.publish(RoleCreatedSystemEvent.builder().payload(role).created(ZonedDateTime.now()).build());
+        securityCommandService.save(event.getPayload());
     }
 
 

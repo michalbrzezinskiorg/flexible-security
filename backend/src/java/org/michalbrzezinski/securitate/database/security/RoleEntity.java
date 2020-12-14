@@ -16,8 +16,6 @@ import static javax.persistence.CascadeType.ALL;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"controllers", "users"})
-@ToString(exclude = {"controllers", "users"})
 class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +31,5 @@ class RoleEntity {
     @Singular
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<ControllerEntity> controllers;
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles", cascade = ALL)
-    @Singular
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<UserEntity> users;
     private Boolean active;
 }

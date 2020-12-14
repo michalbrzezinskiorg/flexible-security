@@ -3,7 +3,6 @@ package org.michalbrzezinski.securitate.config.security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.michalbrzezinski.securitate.config.security.port.DatabaseForSecurityConfiguration;
-import org.michalbrzezinski.securitate.feature.security.events.CreateRoleSystemEvent;
 import org.michalbrzezinski.securitate.feature.security.events.CreateUserSystemEvent;
 import org.michalbrzezinski.securitate.feature.security.objects.Controller;
 import org.michalbrzezinski.securitate.feature.security.objects.Role;
@@ -17,6 +16,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Component
 @Slf4j
@@ -31,19 +31,19 @@ class CustomAuthenticationProvider {
     public Collection<? extends GrantedAuthority> getUserAuthorities(DirContextOperations userData, String username) {
         log.info(">>>>> AUTHORIZATION START <<<<< [{}]", username);
         Set<Authority> authorities = new HashSet<>();
-        String displayName = userData.getStringAttribute("displayName");
+        String displayName = userData.getStringAttribute("cn");
         String email = userData.getStringAttribute("mail");
-        User user = getUser(email, displayName);
+        User user = getUser(displayName, email);
         setPermissions(user, authorities);
         log.info(">>>>> AUTHORIZATION END <<<<< [{}] granted for [{}]", username, authorities);
         return authorities;
     }
 
-    private User getUser(String login, String displayName) {
+    private User getUser(String login, String mail) {
         Optional<User> oUser = securityQueryService.getByLogin(login);
         if (oUser.isEmpty()) {
-            log.debug("adding new user to database username [{}] ", displayName);
-            return saveUser(login, displayName);
+            log.debug("adding new user to database login [{}] ", mail);
+            return saveUser(login, mail);
         }
         return oUser.get();
     }
@@ -68,6 +68,7 @@ class CustomAuthenticationProvider {
                 .role(assignRole(roleName))
                 .name(displayName)
                 .surname(displayName)
+                .active(true)
                 .login(login)
                 .build();
         applicationEventPublisher.publish(CreateUserSystemEvent.builder()
@@ -82,24 +83,13 @@ class CustomAuthenticationProvider {
         Optional<Role> oRole = securityQueryService.findRoleByName(rolename);
         if (oRole.isEmpty()) {
             log.info("creating role [{}]", rolename);
-            Set<Controller> controllers = getControllerDOS(rolename);
-            Role role = Role.builder().name(rolename).controllers(controllers).build();
-            try {
-                log.info("saving [{}]", role);
-                applicationEventPublisher.publish(
-                        CreateRoleSystemEvent.builder()
-                                .created(ZonedDateTime.now())
-                                .payload(role)
-                                .build());
-                return role;
-            } catch (Exception e) {
-                log.error(" error [{}]", e);
-            }
+            Set<Controller> controllers = getControllers(rolename);
+            return Role.builder().name(rolename).controllers(controllers).build();
         }
         return oRole.get();
     }
 
-    private Set<Controller> getControllerDOS(String roleName) {
+    private Set<Controller> getControllers(String roleName) {
         if (ADMIN.equals(roleName))
             return securityQueryService.findAllControllers();
         else
@@ -107,7 +97,14 @@ class CustomAuthenticationProvider {
     }
 
     private void setPermissions(User user, Set<Authority> authorities) {
-        securityQueryService.findControllersByUser(user).forEach(c -> addControllersToAuthorities(c, authorities));
+        Stream.concat(
+                user.getRoles().stream()
+                        .flatMap(r -> r.getControllers().stream()),
+                user.getPermissions().stream()
+                        .flatMap(p -> p.getControllers().stream())
+        )
+                .forEach(c ->
+                        addControllersToAuthorities(c, authorities));
     }
 
     private void addControllersToAuthorities(Controller c, Set<Authority> authorities) {
