@@ -1,5 +1,16 @@
 version: '3'
 services:
+  frontend:
+    container_name: frontend
+    image: node:12.13
+    environment:
+      NG_CLI_ANALYTIVS: ci
+    volumes:
+      - ./frontend:/home/securitate/frontend
+    working_dir: /home/securitate/frontend
+    command: bash -c "npm install && npm start"
+    ports:
+      - 4200:4200
   mysql:
     image: mysql:5.7
     container_name: mysql
