@@ -11,6 +11,21 @@ services:
     command: bash -c "npm install && npm start"
     ports:
       - 4200:4200
+  backend:
+    container_name: backend
+    depends_on:
+      - mongodb
+    image: maven:3.6.3-jdk-11
+    env_file:
+      - .env
+    working_dir: /home/securitate/backend
+    volumes:
+      - ./backend:/home/securitate/backend
+      - ~/.m2:/root/.m2
+    ports:
+      - 8080:8080
+      - 5050:8000
+    command: mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000"
   mysql:
     image: mysql:5.7
     container_name: mysql
