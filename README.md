@@ -1,6 +1,6 @@
 *SPRING SECURITY DONE RIGHT*
 
-DDD, modulariry, events
+modulariry, events
 + POC for using LDAP
 https://hub.docker.com/r/bitnami/openldap/
 
